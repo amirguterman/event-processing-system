@@ -6,7 +6,6 @@ const app = express();
 
 app.use(express.json());
 
-
 const pool = new pg.Pool({
     // TODO: ... add postgresSql configuration here also ..
 });
@@ -27,10 +26,10 @@ app.post('/liveEvent', (req, res) => {
     res.status(200).json({ message: 'Event received' });
 });
 
-// Schedule task to run every hour
-cron.schedule('0 * * * *', () => {
+// Schedule task to run every minute
+cron.schedule('* * * * *', () => {
   const date = new Date();
-  const timestamp = `${date.getHours()}-${date.getMinutes()}_${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
+  const timestamp = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}_${date.getHours()}-${date.getMinutes()}`;
   fs.rename('events.jsonl', `events-${timestamp}.jsonl`, err => {
     if (err) {
       console.error('Error renaming file:', err);
