@@ -45,13 +45,13 @@ The application will now be running, with the server accepting events at the `/l
 ### Server
 The server, implemented in Express.js, listens to incoming POST requests at the /liveEvent endpoint. Upon receiving an event, the server logs the event data to a events.jsonl file. The server also provides a GET endpoint, /userEvents/:userId, which fetches the revenue for a specific user from the PostgreSQL database.
 
-The server is also responsible for file management. Every minute, it checks if the events.jsonl file exists. If it does, the server renames the file by adding a timestamp, thereby archiving the file and creating a new events.jsonl file for upcoming events.
+The server is also responsible for file management. Every minute, it checks if the events.jsonl file exists. If it does, the server renames the file by adding a timestamp, thereby archiving the file and creating a new events.jsonl file for upcoming events. This process is atomic to ensure that there's no situation where event files are not archived before they are processed in the database, as well as not to process them twice in cases where the application terminates between these operations.
 
 ### Client
 The client module is responsible for sending events to the server. It reads the events from the events.jsonl file and sends each event to the /liveEvent endpoint. Once the events are sent, it generates new test events and appends them to the events.jsonl file. The client module also includes functionality to list user events from the server.
 
 ### Data Processor
-The data processor is responsible for processing the logged events and updating the user revenue data in the PostgreSQL database accordingly. It reads the events from the timestamped event files, calculates the revenue changes for each user, and updates the database. After processing a file, it moves the file to a separate directory for processed files.
+The data processor is responsible for processing the logged events and updating the user revenue data in the PostgreSQL database accordingly. It reads the events from the timestamped event files, calculates the revenue changes for each user, and updates the database. After processing a file, it moves the file to a separate directory for processed files. The operations of reading, processing, and moving the file are also performed as an atomic operation, ensuring that an event file is processed exactly once even in case of application terminations.
 
 ## Event Format
 
