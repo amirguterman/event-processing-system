@@ -1,29 +1,41 @@
 
 const fs = require('fs');
 const express = require('express');
+const cron = require('node-cron');
 const app = express();
 
 app.use(express.json());
 
-app.post('/liveEvent', (req, res) => {
-    const authHeader = req.headers.authorization;
-
-    if (authHeader !== 'secret') {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    fs.appendFile('events.json', JSON.stringify(req.body) + '\n', err => {
-        if (err) {
-            console.error('Error writing file:', err);
-        }
-    });
-
-    res.status(200).json({ message: 'Event received' });
-});
-
 
 const pool = new pg.Pool({
     // TODO: ... add postgresSql configuration here also ..
+});
+
+app.post('/liveEvent', (req, res) => {
+    const authHeader = req.headers.authorization;
+    
+    if (authHeader !== 'secret') {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    fs.appendFile('events.jsonl', JSON.stringify(req.body) + '\n', err => {
+      if (err) {
+        console.error('Error writing file:', err);
+      }
+    });
+    
+    res.status(200).json({ message: 'Event received' });
+});
+
+// Schedule task to run every hour
+cron.schedule('0 * * * *', () => {
+  const date = new Date();
+  const timestamp = `${date.getHours()}-${date.getMinutes()}_${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
+  fs.rename('events.jsonl', `events-${timestamp}.jsonl`, err => {
+    if (err) {
+      console.error('Error renaming file:', err);
+    }
+  });
 });
 
 app.get('/userEvents/:userId', (req, res) => {
@@ -38,9 +50,6 @@ app.get('/userEvents/:userId', (req, res) => {
         res.status(200).json(result.rows);
     });
 });
-
-
-
 
 app.listen(8000, () => {
     console.log('Server is running on port 8000');
