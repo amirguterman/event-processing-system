@@ -1,4 +1,3 @@
-
 const fs = require('fs');
 const express = require('express');
 const cron = require('node-cron');
@@ -30,10 +29,17 @@ app.post('/liveEvent', (req, res) => {
 cron.schedule('* * * * *', () => {
   const date = new Date();
   const timestamp = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}_${date.getHours()}-${date.getMinutes()}`;
-  fs.rename('events.jsonl', `events-${timestamp}.jsonl`, err => {
+
+  fs.access('events.jsonl', fs.constants.F_OK, (err) => {
     if (err) {
-      console.error('Error renaming file:', err);
+      console.error('events.jsonl does not exist');
+      return;
     }
+    fs.rename('events.jsonl', `events-${timestamp}.jsonl`, err => {
+      if (err) {
+        console.error('Error renaming file:', err);
+      }
+    });
   });
 });
 
