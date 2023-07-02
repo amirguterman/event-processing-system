@@ -116,7 +116,12 @@ async function processEvents() {
 async function repeatListUserEvents() {
     while (true) {
         for (let i = 1; i <= 5; i++) {
-            await listUserEvents(`user${i}`);
+            try {
+                await listUserEvents(`user${i}`);
+            } catch (error) {
+                console.warn('could not get user events from server');
+            }
+            
         }
         await new Promise(resolve => setTimeout(resolve, listUserEventsPeriod * 1000));
     }

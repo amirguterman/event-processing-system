@@ -61,7 +61,7 @@ async function processEventFile(file) {
       await pool.tx(async t => {
           // Read the event file
           const data = await fs.readFile(file, 'utf8');
-          const events = data.trim().split('\n').map(line => JSON.parse(line));
+          const events = data.trim().split('\n').filter(line => line.length > 0).map(line => JSON.parse(line));
         
           // Calculate the revenue for each user
           const revenues = {};

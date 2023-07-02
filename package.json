@@ -4,7 +4,10 @@
   "description": "A Node.js application that consists of a server, a client, and a data processor",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "concurrently --names \"SERVER,PROCESSOR,CLIENT\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold\" \"npm run server\" \"npm run processor\"  \"npm run client\"",
+    "server": "node server.js",
+    "processor": "node data_processor.js",
+    "client": "node client.js"
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -12,5 +15,8 @@
     "nodemon": "^2.0.22",
     "pg": "^8.11.1",
     "pg-promise": "^11.5.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
   }
 }
