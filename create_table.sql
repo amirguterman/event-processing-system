@@ -1,5 +1,4 @@
-CREATE TABLE events (
-  userId VARCHAR(255),
-  eventName VARCHAR(255),
-  value INT
+CREATE TABLE users_revenue (
+  user_id VARCHAR(255),
+  revenue INT
 );
