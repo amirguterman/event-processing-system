@@ -54,36 +54,32 @@ The client module is responsible for sending events to the server. It reads the 
 The data processor is responsible for processing the logged events and updating the user revenue data in the PostgreSQL database accordingly. It reads the events from the timestamped event files, calculates the revenue changes for each user, and updates the database. After processing a file, it moves the file to a separate directory for processed files. The operations of reading, processing, and moving the file are also performed as an atomic operation, ensuring that an event file is processed exactly once even in case of application terminations.
 
 ### Sequence Diagram 
-```puml
-@startuml
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server as Express.js Server
+    participant FS as File System
+    participant DP as Data Processor
+    participant DB as PostgreSQL Database
 
-actor Client
-entity "Express.js Server" as Server
-database "PostgreSQL Database" as DB
-database "File System" as FS
-entity "Data Processor" as DP
+    Client->>Server: POST /liveEvent {eventData}
+    Server->>Server: Log event data
+    Server->>FS: Write to events.jsonl
 
-== Sending and Logging Events ==
-Client -> Server : POST /liveEvent {eventData}
-Server -> Server : Log event data
-Server -> FS : Write to events.jsonl
+    Note over Server,FS: Archiving and Creating New File
+    autonumber
+    Server->>FS: Check if events.jsonl exists
+    Server->>FS: Rename file with timestamp
+    Server->>FS: Create new events.jsonl
 
-== Archiving and Creating New File ==
-autonumber
-Server -> FS : Check if events.jsonl exists
-Server -> FS : Rename file with timestamp
-Server -> FS : Create new events.jsonl
+    Note over FS,DP: Reading and Processing Archived File
+    FS->>DP: Notify of new archived file
+    DP->>FS: Read events from archived file
+    DP->>DP: Calculate revenue changes
+    DP->>DB: Update user revenue
 
-== Reading and Processing Archived File ==
-FS -> DP : Notify of new archived file
-DP -> FS : Read events from archived file
-DP -> DP : Calculate revenue changes
-DP -> DB : Update user revenue
-
-== Archiving Processed File ==
-DP -> FS : Move file to processed files directory
-
-@enduml
+    Note over DP,FS: Archiving Processed File
+    DP->>FS: Move file to processed files directory
 ```
 
 ## Event Format
