@@ -29,7 +29,7 @@ The data processor reads all event files in the current directory, calculates th
     ```bash
     node server.js
     ```
-6. In a new terminal window, send events from the client by running:
+6. In a new terminal window, start event sending with the client by running:
     ```bash
     node client.js
     ```
@@ -40,7 +40,7 @@ The data processor reads all event files in the current directory, calculates th
 
 ## Note
 
-The `events.jsonl` file used by the client and server should be in the following format:
+The `events.jsonl` file used by the client and server will be created automatically and should be in the following format:
 
 ```json
 {"userId": "user1", "name": "add_revenue", "value": 100}

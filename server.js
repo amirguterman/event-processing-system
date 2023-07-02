@@ -7,10 +7,16 @@ const app = express();
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// PostgreSQL pool configuration
+
+// PostgreSQL connection pool
 const pool = new pg.Pool({
-    // TODO: ... add postgresSql configuration here also ..
-});
+    user: 'postgres',
+    host: 'localhost',
+    database: 'postgres',
+    password: 'password1!',
+    port: 5432,
+  });  
+
 
 // POST endpoint to receive live events
 app.post('/liveEvent', (req, res) => {
@@ -42,7 +48,7 @@ cron.schedule('* * * * *', () => {
   // Check if events.jsonl file exists
   fs.access('events.jsonl', fs.constants.F_OK, (err) => {
     if (err) {
-      console.error('events.jsonl does not exist');
+      console.debug('events.jsonl does not exist');
       return;
     }
     // Rename events.jsonl file with timestamp
