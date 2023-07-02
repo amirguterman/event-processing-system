@@ -22,13 +22,23 @@ app.post('/liveEvent', (req, res) => {
   });
   
 
-app.get('/userEvents/:userId', (req, res) => {
-  const userId = req.params.userId;
+  const pool = new pg.Pool({
+    // TODO: ... add postgresSql configuration here also ..
+  });
   
-  // TODO: Fetch events from database and return as JSON
+  app.get('/userEvents/:userId', (req, res) => {
+    const userId = req.params.userId;
+    
+    pool.query('SELECT * FROM events WHERE userId = $1', [userId], (err, result) => {
+      if (err) {
+        console.error('Error executing query:', err.stack);
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+      
+      res.status(200).json(result.rows);
+    });
+  });
   
-  res.status(200).json({ message: `Events for user ${userId}` });
-});
 
 
 app.listen(8000, () => {
