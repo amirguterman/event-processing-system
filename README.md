@@ -18,11 +18,25 @@ The data processor reads all event files in the current directory, calculates th
 
 ## Setup
 
-1. Install the necessary dependencies by running `npm install`.
-2. Update the PostgreSQL configuration in `server.js` and `data_processor.js`.
-3. Start the server by running `node server.js`.
-4. Send events from the client by running `node client.js`.
-5. Process the events by running `node data_processor.js`.
+1. Clone the repository to your local machine.
+2. Navigate to the project directory.
+3. Install the necessary dependencies by running:
+    ```bash
+    npm install
+    ```
+4. Update the PostgreSQL configuration in `server.js` and `data_processor.js`.
+5. Start the server by running:
+    ```bash
+    node server.js
+    ```
+6. In a new terminal window, send events from the client by running:
+    ```bash
+    node client.js
+    ```
+7. In another new terminal window, process the events by running:
+    ```bash
+    node data_processor.js
+    ```
 
 ## Note
 
