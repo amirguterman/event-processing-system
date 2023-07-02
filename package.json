@@ -1,16 +1,14 @@
 {
-  "name": "finonex",
+  "name": "client-server-db",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A Node.js application that consists of a server, a client, and a data processor",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
+    "node-cron": "^3.0.2",
     "nodemon": "^2.0.22",
     "pg": "^8.11.1"
   }
