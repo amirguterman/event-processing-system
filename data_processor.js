@@ -5,7 +5,7 @@ const pool = new pg.Pool({
   // TODO: Add some PostgreSQL configuration here ......
 });
 
-const eventsFile = process.argv[2] || 'events.jsonl';
+const eventsFile = 'pendingEvents.jsonl';
 
 fs.readFile(eventsFile, 'utf8', (err, data) => {
     if (err) {
