@@ -27,4 +27,13 @@ function sendEvent(event) {
   req.end();
 }
 
-// TODO: Use sendEvent function to send events
+// Call sendEvent function to send events
+const events = [
+    { userId: 'abc123', name: 'add_revenue', value: 100 },
+    { userId: 'abc123', name: 'subtract_revenue', value: 50 },
+];
+
+events.forEach(event => {
+    sendEvent(event);
+});
+  
