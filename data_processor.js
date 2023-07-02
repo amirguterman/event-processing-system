@@ -1,8 +1,8 @@
-constpg = require('pg');
+const pg = require('pg');
 const fs = require('fs');
 
 const pool = new pg.Pool({
-  // TODO: put some PostgreSQL configuration here ......
+  // TODO: Add some PostgreSQL configuration here ......
 });
 
 fs.readFile('events.json', 'utf8', (err, data) => {
